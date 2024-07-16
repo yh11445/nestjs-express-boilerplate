@@ -21,6 +21,7 @@ export class ValidationException extends HttpException {
     super(errorObj, 400)
   }
 }
+
 export const getErrorMessage = (errors: ValidationError[]) => {
   return errors.reduce((prev, { property, constraints }: any) => ((prev[property] = [Object.values(constraints || {}).join(',')]), prev), {})
 }

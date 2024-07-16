@@ -23,10 +23,10 @@ export async function middleware(app: NestExpressApplication) {
   app.useGlobalInterceptors(new SuccessInterceptor(), new LoggingInterceptor())
   app.useGlobalPipes(
     new ValidationPipe({
-      transform: true, // dto 전환
+      transform: true,
       transformOptions: { enableImplicitConversion: true },
       whitelist: true, // only required validator output
-      validateCustomDecorators: true, //custom decorators, validator too like ParamAndBody
+      validateCustomDecorators: true,
       exceptionFactory: (errors: ValidationError[]) => new ValidationException(errors),
     })
   )

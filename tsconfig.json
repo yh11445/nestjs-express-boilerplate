@@ -19,6 +19,10 @@
       "@guards/*": ["src/common/guards/*"],
       "@interceptors/*": ["src/common/interceptors/*"],
       "@strategies/*": ["src/common/strategies/*"],
+      "@config/*": ["src/config/*"],
+      "@decorators/*": ["src/common/decorators/*"],
+      "@api/*": ["src/api/*"],
+      "@entities/*": ["src/entities/*"]
     },
     "skipLibCheck": true,
     "strictNullChecks": false,
