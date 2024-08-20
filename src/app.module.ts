@@ -9,6 +9,7 @@ import { ClsPluginTransactional } from '@nestjs-cls/transactional'
 import { DataSource } from 'typeorm'
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm'
 import { UsersModule } from './api/users/users.module'
+import { AuthModule } from './api/auth/auth.module'
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UsersModule } from './api/users/users.module'
       ],
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

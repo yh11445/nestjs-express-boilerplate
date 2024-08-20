@@ -1,11 +1,4 @@
 import { PickType } from '@nestjs/swagger'
-import { entityValidation } from '@src/common/exceptions'
-import { Users } from '@src/entities/users.entity'
-import { plainToInstance } from 'class-transformer'
+import { Users } from '@entities/users.entity'
 
-export class CreateUserDto extends PickType(Users, ['name', 'email', 'password']) {
-  public async toEntity<T>(entity: Partial<T>) {
-    const clazz = plainToInstance(CreateUserDto, Object.assign(this, entity))
-    return await entityValidation(clazz)
-  }
-}
+export class CreateUserDto extends PickType(Users, ['name', 'email', 'password']) {}

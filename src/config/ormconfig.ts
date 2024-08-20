@@ -7,6 +7,8 @@ import * as fs from 'fs'
 
 export const typeORMConfig = (configService: ConfigService): TypeOrmModuleOptions & SeederOptions & DataSourceOptions => {
   const synchronize = configService.get('NODE_ENV') === 'local'
+  const isSeedEnabled = configService.get('ENABLE_SEED') === 'true'
+
   return {
     type: 'mysql',
     host: configService.get('DATABASE_HOST'),
@@ -14,9 +16,9 @@ export const typeORMConfig = (configService: ConfigService): TypeOrmModuleOption
     username: configService.get('DATABASE_USERNAME'),
     password: configService.get('DATABASE_PASSWORD'),
     database: configService.get('DATABASE_NAME'),
-    entities: [join(__dirname, '../**/*.entity{.ts,.js}')],
+    entities: [join(__dirname, './../entities/**/*.entity{.ts,.js}')],
     migrations: [join(__dirname, './../database/migrations/*{.ts,.js}')],
-    seeds: [join(__dirname, './../database/seeds/*{.ts,.js}')],
+    seeds: isSeedEnabled ? [join(__dirname, './../database/seeds/*{.ts,.js}')] : undefined,
     synchronize,
     logging: true,
     timezone: 'Z',

@@ -18,11 +18,14 @@
       "@filters/*": ["src/common/filters/*"],
       "@guards/*": ["src/common/guards/*"],
       "@interceptors/*": ["src/common/interceptors/*"],
-      "@strategies/*": ["src/common/strategies/*"],
+      "@strategies/*": ["src/api/auth/strategies/*"],
       "@config/*": ["src/config/*"],
       "@decorators/*": ["src/common/decorators/*"],
       "@api/*": ["src/api/*"],
-      "@entities/*": ["src/entities/*"]
+      "@entities/*": ["src/entities/*"],
+      "@migrations/*": ["src/database/migrations/*"],
+      "@seeds/*": ["src/database/seeds/*"],
+      "@utils/*": ["src/utils/*"]
     },
     "skipLibCheck": true,
     "strictNullChecks": false,
