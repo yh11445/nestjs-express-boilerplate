@@ -21,14 +21,14 @@ yarn install
 ### Running the App
 
 ```bash
-# Development
-yarn start
+# Local
+yarn local
 
-# Watch mode
-yarn start:dev
+# Development
+yarn dev
 
 # Production
-yarn start:prod
+yarn prod
 ```
 
 ### License
