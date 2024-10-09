@@ -8,7 +8,10 @@ import { hashCheck } from '@utils/hash.util'
 
 @Injectable()
 export class AuthUserStrategy extends PassportStrategy(JwtStrategy, 'auth:user') {
-  constructor(configService: ConfigService) {
+  constructor(
+    configService: ConfigService,
+    private readonly usersService: UsersService
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       secretOrKey: configService.get('SESSION_SECRET'),
@@ -16,8 +19,12 @@ export class AuthUserStrategy extends PassportStrategy(JwtStrategy, 'auth:user')
     })
   }
 
-  async validate({ email }: { email: string }, done: VerifiedCallback): Promise<any> {
-    const user = { email }
+  async validate(payload: { email: string }, done: VerifiedCallback): Promise<any> {
+    const { email } = payload
+    const user = await this.usersService.findByEmail(email)
+    if (!user) {
+      throw new UnauthorizedException('User not found')
+    }
     return done(null, user)
   }
 }
