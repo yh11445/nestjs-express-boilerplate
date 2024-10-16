@@ -10,6 +10,3 @@ export const ApiCommonArrayResponse = (obj: any) => {
     ApiOkResponse({ schema: { properties: { data: { type: 'array', items: { $ref: getSchemaPath(obj) } } } } })
   )
 }
-export const ApiSuccessResponse = () => {
-  return applyDecorators(ApiOkResponse({ schema: { properties: { is_success: { type: 'boolean' } } } }))
-}

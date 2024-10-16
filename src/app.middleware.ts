@@ -2,25 +2,21 @@ import { HttpAdapterHost } from '@nestjs/core'
 import { NestExpressApplication } from '@nestjs/platform-express'
 import { join } from 'path'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { AllExceptionsFilter, TypeOrmExceptionFilter, ValidationExceptionFilter } from '@common/filters'
-import { LoggingInterceptor, SuccessInterceptor } from '@common/interceptors'
+import { CommonExceptionsFilter } from '@common/filters'
+import { LoggingInterceptor, ResponseInterceptor } from '@common/interceptors'
 import { ValidationError, ValidationPipe } from '@nestjs/common'
 import { ValidationException } from '@common/exceptions'
 import { ConfigService } from '@nestjs/config'
 import helmet from 'helmet'
-import session from 'express-session'
-import cookieParser from 'cookie-parser'
+import * as session from 'express-session'
+import * as cookieParser from 'cookie-parser'
 import csurf from 'csurf'
 
 export async function middleware(app: NestExpressApplication) {
   const configService = app.get<ConfigService>(ConfigService)
   const httpAdapterHost = app.get(HttpAdapterHost)
-  app.useGlobalFilters(
-    new AllExceptionsFilter(httpAdapterHost),
-    new TypeOrmExceptionFilter(httpAdapterHost),
-    new ValidationExceptionFilter(httpAdapterHost)
-  )
-  app.useGlobalInterceptors(new SuccessInterceptor(), new LoggingInterceptor())
+  app.useGlobalFilters(new CommonExceptionsFilter(httpAdapterHost))
+  app.useGlobalInterceptors(new ResponseInterceptor(), new LoggingInterceptor())
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

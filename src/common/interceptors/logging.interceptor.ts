@@ -1,5 +1,5 @@
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common'
-import { Observable, tap } from 'rxjs'
+import { finalize, Observable } from 'rxjs'
 import { Request } from 'express'
 
 @Injectable()
@@ -21,19 +21,21 @@ export class LoggingInterceptor implements NestInterceptor {
     }
 
     return next.handle().pipe(
-      tap(() => {
+      finalize(() => {
         const body = maskSensitiveData(req.body)
-        this.logger.log(
-          `\r\n[${context.getClass().name} ${context.getHandler().name}] ` +
-            `elapsed_time: ${Date.now() - now} ms \r\n` +
-            `ip:${ip} \r\n` +
-            `${req.method} ${req.url} ` +
-            JSON.stringify({
-              query: req.query,
-              body,
-              userAgent,
-            })
-        )
+        const elapsedTime = Date.now() - now
+        const logMessage = `
+[${context.getClass().name}::${context.getHandler().name}]
+----------------------------------------------------
+IP Address       : ${ip}
+User Agent       : ${userAgent}
+Method           : ${req.method}
+URL              : ${req.url}
+Elapsed Time     : ${elapsedTime} ms
+----------------------------------------------------
+Query Parameters : ${JSON.stringify(req.query, null, 2)}
+Body             : ${JSON.stringify(body, null, 2)}`
+        this.logger.log(logMessage)
       })
     )
   }
