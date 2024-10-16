@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config'
 import helmet from 'helmet'
 import * as session from 'express-session'
 import * as cookieParser from 'cookie-parser'
-import csurf from 'csurf'
+import * as csurf from 'csurf'
 
 export async function middleware(app: NestExpressApplication) {
   const configService = app.get<ConfigService>(ConfigService)

@@ -4,6 +4,7 @@ import { SeederOptions } from 'typeorm-extension'
 import { join } from 'path'
 import { ConfigService } from '@nestjs/config'
 import * as fs from 'fs'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 export const typeORMConfig = (configService: ConfigService): TypeOrmModuleOptions & SeederOptions & DataSourceOptions => {
   const synchronize = configService.get('NODE_ENV') === 'local'
@@ -29,6 +30,7 @@ export const typeORMConfig = (configService: ConfigService): TypeOrmModuleOption
     retryAttempts: 5,
     retryDelay: 3000,
     maxQueryExecutionTime: 1000,
+    namingStrategy: new SnakeNamingStrategy(),
     cache: configService.get('REDIS_HOST')
       ? {
           type: 'redis',
