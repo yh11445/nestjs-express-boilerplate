@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config'
 import * as fs from 'fs'
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
-export const typeORMConfig = (configService: ConfigService): TypeOrmModuleOptions & SeederOptions & DataSourceOptions => {
+export const typeOrmConfig = (configService: ConfigService): TypeOrmModuleOptions & SeederOptions & DataSourceOptions => {
   const synchronize = configService.get('NODE_ENV') === 'local'
   const isSeedEnabled = configService.get('ENABLE_SEED') === 'true'
 
@@ -22,7 +22,7 @@ export const typeORMConfig = (configService: ConfigService): TypeOrmModuleOption
     seeds: isSeedEnabled ? [join(__dirname, './../database/seeds/*{.ts,.js}')] : undefined,
     synchronize,
     logging: true,
-    timezone: 'Z',
+    timezone: '+09:00',
     extra: {
       connectionLimit: 300,
       charset: 'utf8mb4_general_ci',
@@ -41,13 +41,13 @@ export const typeORMConfig = (configService: ConfigService): TypeOrmModuleOption
           },
         }
       : undefined,
-    ssl:
-      configService.get('NODE_ENV') === 'production'
-        ? {
-            ca: fs.readFileSync(configService.get('DATABASE_CA')),
-            key: fs.readFileSync(configService.get('DATABASE_KEY')),
-            cert: fs.readFileSync(configService.get('DATABASE_CERT')),
-          }
-        : undefined,
+    // ssl:
+    //   configService.get('NODE_ENV') === 'production'
+    //     ? {
+    //         ca: fs.readFileSync(configService.get('DATABASE_CA')),
+    //         key: fs.readFileSync(configService.get('DATABASE_KEY')),
+    //         cert: fs.readFileSync(configService.get('DATABASE_CERT')),
+    //       }
+    //     : undefined,
   }
 }

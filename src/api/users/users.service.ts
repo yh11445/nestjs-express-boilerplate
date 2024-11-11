@@ -4,12 +4,18 @@ import { UpdateUserDto } from '@api/users/dto/update-user.dto'
 import { User } from '@entities/users.entity'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
+import { hashMake } from '@src/utils/hash.util'
 
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private readonly repository: Repository<User>) {}
-  create(createUserDto: CreateUserDto) {
-    return this.repository.save(createUserDto)
+  async create(createUserDto: CreateUserDto) {
+    const hashedPassword = await hashMake(createUserDto.password)
+    const entity = {
+      ...createUserDto,
+      password: hashedPassword,
+    }
+    return this.repository.save(entity)
   }
 
   findAll() {
@@ -30,5 +36,10 @@ export class UsersService {
 
   remove(id: number) {
     return this.repository.delete(id)
+  }
+
+  async updateRefreshToken(id: number, newRefreshToken: string) {
+    const hashedToken = await hashMake(newRefreshToken)
+    return this.repository.update(id, { refreshToken: hashedToken })
   }
 }

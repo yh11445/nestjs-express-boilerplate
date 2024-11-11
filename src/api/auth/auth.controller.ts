@@ -1,8 +1,10 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common'
+import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common'
 import { AuthService } from '@api/auth/auth.service'
 import { AuthUserLoginGuard } from '@api/auth/guards/auth.guard'
 import { AuthLoginDto } from '@api/auth/dto/auth.login.dto'
-import { CreateUserDto } from '@api/users/dto/create-user.dto'
+import { Request } from 'express'
+import { plainToInstance } from 'class-transformer'
+import { ResponseUserDto } from '@src/api/users/dto/response-user.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -10,12 +12,14 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(AuthUserLoginGuard)
-  async login(@Body() loginDto: AuthLoginDto) {
-    return this.authService.login(loginDto)
+  async login(@Body() loginDto: AuthLoginDto, @Req() req: Request) {
+    const userInfo = plainToInstance(ResponseUserDto, req.user)
+    const { access_token, refresh_token } = await this.authService.login(loginDto)
+    return { userInfo, access_token, refresh_token }
   }
 
-  @Post('signup')
-  async signup(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signup(createUserDto)
+  @Post('refresh')
+  async refreshAccessToken(@Body('refreshToken') refreshToken: string) {
+    return this.authService.refreshAccessToken(refreshToken)
   }
 }

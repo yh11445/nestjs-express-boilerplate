@@ -14,8 +14,8 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const maskSensitiveData = (obj: any) => {
       const maskedObj = { ...obj }
-      if (maskedObj.result_image) {
-        maskedObj.result_image = '****(base64 data)****'
+      if (maskedObj.image) {
+        maskedObj.image = '****(base64 data)****'
       }
       return maskedObj
     }

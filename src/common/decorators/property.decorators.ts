@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common'
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Transform } from 'class-transformer'
-import { IsDate, IsNumber, IsObject, IsString, isEmpty } from 'class-validator'
+import { IsArray, IsBoolean, IsDate, IsNumber, IsObject, IsString, isEmpty } from 'class-validator'
 
 export const NumTransform = () => Transform(({ value }) => (isEmpty(value) ? undefined : Number(value)))
 
@@ -17,14 +17,22 @@ export const BooleanProperty = (options?: ApiPropertyOptions) => {
   return applyDecorators(
     ApiProperty(options),
     Transform(({ value }) => (value === 'true' ? true : value == true ? true : false)),
-    IsString()
+    IsBoolean()
   )
 }
 
 export const DateProperty = (options?: ApiPropertyOptions) => {
-  return applyDecorators(ApiProperty(options), IsDate())
+  return applyDecorators(
+    ApiProperty(options),
+    Transform(({ value }) => new Date(value)),
+    IsDate()
+  )
 }
 
 export const ObjectProperty = (options?: ApiPropertyOptions) => {
   return applyDecorators(ApiProperty(options), IsObject())
+}
+
+export const ArrayProperty = (options?: ApiPropertyOptions) => {
+  return applyDecorators(ApiProperty({ ...options, isArray: true }), IsArray())
 }

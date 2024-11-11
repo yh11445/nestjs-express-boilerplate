@@ -7,26 +7,13 @@ import { User } from '@entities/users.entity'
 import { AuthService } from '@api/auth/auth.service'
 import { UsersModule } from '@api/users/users.module'
 import { AuthController } from '@api/auth/auth.controller'
-import { AuthUserLoginGuard } from '@api/auth/guards/auth.guard'
-import { AuthUserLoginStrategy } from '@strategies/auth.user.strategy'
+import { AuthUserGuard, AuthUserLoginGuard } from '@api/auth/guards/auth.guard'
+import { AuthUserLoginStrategy, AuthUserStrategy } from '@strategies/auth.user.strategy'
 
 @Module({
-  imports: [
-    ConfigModule,
-    PassportModule,
-    TypeOrmModule.forFeature([User]),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        secret: config.get('SESSION_SECRET'),
-        signOptions: { expiresIn: '30m' },
-      }),
-    }),
-    UsersModule,
-  ],
+  imports: [ConfigModule, PassportModule, TypeOrmModule.forFeature([User]), JwtModule, UsersModule],
   controllers: [AuthController],
-  providers: [AuthService, AuthUserLoginGuard, AuthUserLoginStrategy],
-  exports: [AuthService],
+  providers: [AuthService, AuthUserLoginGuard, AuthUserLoginStrategy, AuthUserGuard, AuthUserStrategy],
+  exports: [],
 })
 export class AuthModule {}

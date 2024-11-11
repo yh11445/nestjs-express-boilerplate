@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { AppController } from '@src/app.controller'
 import { AppService } from '@src/app.service'
-import { getEnvFilePath, typeORMConfig } from './config'
+import { getEnvFilePath, typeOrmConfig } from './config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { ClsModule } from 'nestjs-cls'
 import { ClsPluginTransactional } from '@nestjs-cls/transactional'
@@ -18,7 +18,7 @@ import { AuthModule } from './api/auth/auth.module'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        return typeORMConfig(config)
+        return typeOrmConfig(config)
       },
     }),
     ClsModule.forRoot({

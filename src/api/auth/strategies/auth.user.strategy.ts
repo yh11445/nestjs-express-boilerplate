@@ -9,23 +9,22 @@ import { hashCheck } from '@utils/hash.util'
 @Injectable()
 export class AuthUserStrategy extends PassportStrategy(JwtStrategy, 'auth:user') {
   constructor(
-    configService: ConfigService,
+    private readonly configService: ConfigService,
     private readonly usersService: UsersService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: configService.get('SESSION_SECRET'),
+      secretOrKey: configService.get('JWT_ACCESS_SECRET'),
       ignoreExpiration: false,
     })
   }
 
-  async validate(payload: { email: string }, done: VerifiedCallback): Promise<any> {
-    const { email } = payload
-    const user = await this.usersService.findByEmail(email)
+  async validate(payload: any): Promise<any> {
+    const user = await this.usersService.findOne(payload.sub)
     if (!user) {
-      return done(new UnauthorizedException('User not found'), false)
+      throw new UnauthorizedException({ message: 'User not found', errorCode: 'USER_NOT_FOUND' })
     }
-    return done(null, user)
+    return user
   }
 }
 
@@ -38,12 +37,12 @@ export class AuthUserLoginStrategy extends PassportStrategy(Strategy, 'auth:user
   async validate(email: string, password: string, done: VerifiedCallback): Promise<any> {
     const user = await this.usersService.findByEmail(email)
     if (!user) {
-      return done(new UnauthorizedException('Invalid email or password'), false)
+      return done(new UnauthorizedException({ message: 'Invalid Login ID', errorCode: 'INVALID_LOGIN_ID' }), false)
     }
 
     const isPasswordValid = await hashCheck(password, user.password)
     if (!isPasswordValid) {
-      return done(new UnauthorizedException('Invalid email or password'), false)
+      return done(new UnauthorizedException({ message: 'Invalid password', errorCode: 'INVALID_PASSWORD' }), false)
     }
 
     return done(null, user)
