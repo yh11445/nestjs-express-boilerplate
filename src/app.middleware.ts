@@ -8,9 +8,9 @@ import { ValidationError, ValidationPipe } from '@nestjs/common'
 import { ValidationException } from '@common/exceptions'
 import { ConfigService } from '@nestjs/config'
 import helmet from 'helmet'
-import * as session from 'express-session'
-import * as cookieParser from 'cookie-parser'
-import * as csurf from 'csurf'
+import session from 'express-session'
+import cookieParser from 'cookie-parser'
+import csurf from 'csurf'
 
 export async function middleware(app: NestExpressApplication) {
   const configService = app.get<ConfigService>(ConfigService)
@@ -39,11 +39,11 @@ export async function middleware(app: NestExpressApplication) {
   app.enableCors({ origin: true, credentials: true, exposedHeaders: ['Authorization'] })
 
   // cookie & session
-  app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false }))
-  app.use(cookieParser())
+  // app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false }))
+  // app.use(cookieParser())
 
   // csrf
-  app.use(csurf())
+  // app.use(csurf())
 
   // body parser
   app.useBodyParser('json', { limit: '10mb' })

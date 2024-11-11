@@ -8,8 +8,9 @@ import { ClsModule } from 'nestjs-cls'
 import { ClsPluginTransactional } from '@nestjs-cls/transactional'
 import { DataSource } from 'typeorm'
 import { TransactionalAdapterTypeOrm } from '@nestjs-cls/transactional-adapter-typeorm'
-import { UsersModule } from './api/users/users.module'
-import { AuthModule } from './api/auth/auth.module'
+import { UsersModule } from '@src/api/users/users.module'
+import { AuthModule } from '@src/api/auth/auth.module'
+import { RedisModule } from '@config/redis.module'
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AuthModule } from './api/auth/auth.module'
     }),
     UsersModule,
     AuthModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
